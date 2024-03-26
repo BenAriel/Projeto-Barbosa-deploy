@@ -33,12 +33,12 @@ const InputBox: React.FC<InputBoxProps> = ({
   };
 
   return (
-    <div className="w-1/2 h-3/4 border-2 border-gray-700 mx-8 bg-gray-200">
+    <div className="w-1/2 h-[100%] border-2 border-gray-700 mx-8 bg-gray-200">
       {" "}
-      <div className="w-full h-1/6 border-b-2 border-gray-700 flex justify-center items-center font-bold text-xl bg-white">
+      <div className="w-full h-[10%] border-b-2 border-gray-700 flex justify-center items-center font-bold text-xl bg-white">
         Digite seu Texto:
       </div>
-      <div className="w-full h-5/6 bg-gray-200">
+      <div className="w-full h-[90%] bg-gray-200">
         <textarea
           id="entrada"
           className="w-full h-full border-none outline-none text-xl resize-none bg-gray-200"
@@ -53,11 +53,11 @@ const InputBox: React.FC<InputBoxProps> = ({
 
 const OutPutBox: React.FC<OutPutBoxProps> = ({ correcoes }) => {
   return (
-    <div className="w-1/2 h-3/4 border-2 border-gray-700 bg-gray-200">
-      <div className="w-full h-1/6 border-b-2 border-gray-700 flex justify-center items-center font-bold text-xl bg-white">
+    <div className="w-1/2 h-[100%] border-2 border-gray-700 mx-8 bg-gray-200">
+      <div className="w-full h-[10%] border-b-2 border-gray-700 flex justify-center items-center font-bold text-xl bg-white">
         Correção Sugerida:
       </div>
-      <div className="w-full placeholder-dinamico h-5/6 flex text-xl opacity-50">
+      <div className="w-full placeholder-dinamico h-[90%] flex text-xl opacity-50">
         {correcoes.length > 0 ? (
           <ul>
             {correcoes.map((correcao, index) => (
@@ -81,7 +81,7 @@ const Boxes: React.FC<BoxesProps> = ({
   correcoes,
 }) => {
   return (
-    <div className="flex h-dvh w-full ">
+    <div className="flex h-full w-full ">
       <InputBox handleInputChange={handleInputChange} inputValue={inputValue} />
       <OutPutBox correcoes={correcoes} />
     </div>

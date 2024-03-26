@@ -75,8 +75,8 @@ const Main = () => {
   }, [buttonPress]); // Chama a função de efeito colateral quando buttonPress é alterado.
 
   return (
-    <div className="w-full h-screen flex flex-row flex-wrap">
-      <div className="w-full">
+    <div className="w-full h-[90%] flex flex-row flex-wrap">
+      <div className="w-full h-[90%]">
         <Boxes
           handleInputChange={handleInputChange}
           inputValue={inputValue}

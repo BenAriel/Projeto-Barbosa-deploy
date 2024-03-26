@@ -9,10 +9,10 @@ function App() {
   return (
     <div className="h-screen">
       <Header />
-      <div className="mx-10">
+      <div className="mx-10 h-[90%]">
         <Main />
-        <Footer />
       </div>
+      <Footer />
     </div>
   );
 }
