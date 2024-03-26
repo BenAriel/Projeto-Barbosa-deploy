@@ -6,15 +6,15 @@ import Main from "./components/Main";
 import Footer from "./components/Footer";
 
 function App() {
-  return (
-    <div className="h-screen">
-      <Header />
-      <div className="mx-10 h-[90%]">
-        <Main />
-      </div>
-      <Footer />
-    </div>
-  );
+    return (
+        <div className="h-screen">
+            <Header />
+            <div className="mx-8 h-[90%]">
+                <Main />
+            </div>
+            <Footer />
+        </div>
+    );
 }
 
 export default App;
