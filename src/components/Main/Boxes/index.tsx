@@ -38,7 +38,7 @@ const InputBox: React.FC<InputBoxProps> = ({ handleInputChange, inputValue }) =>
             <div className="w-full h-[85%] lg:h-[90%] bg-gray-200">
                 <textarea
                     id="entrada"
-                    className="w-full h-full border-none outline-none text-xl resize-none bg-gray-200"
+                    className="w-full h-full border-none outline-none text-xl resize-none bg-gray-200 px-1"
                     value={inputValue}
                     onChange={handleChange}
                     placeholder="Digite seu texto"
@@ -54,7 +54,7 @@ const OutPutBox: React.FC<OutPutBoxProps> = ({ correcoes }) => {
             <div className="w-full h-[15%] lg:h-[10%] border-b-2 border-gray-700 flex justify-center items-center font-bold text-xl bg-white">
                 Correção Sugerida:
             </div>
-            <div className="w-full placeholder-dinamico h-[85%] lg:h-[90%] flex text-xl opacity-50">
+            <div className="w-full placeholder-dinamico h-[85%] lg:h-[90%] flex text-xl opacity-50 px-1">
                 {correcoes.length > 0 ? (
                     <ul>
                         {correcoes.map((correcao, index) => (
@@ -74,7 +74,7 @@ const OutPutBox: React.FC<OutPutBoxProps> = ({ correcoes }) => {
 
 const Boxes: React.FC<BoxesProps> = ({ handleInputChange, inputValue, correcoes }) => {
     return (
-        <div className="flex flex-col md:flex-row items-center gap-y-10 lg:gap-y-0 h-full w-full">
+        <div className="flex flex-col md:flex-row items-center gap-y-10 lg:gap-y-0 h-[90%] w-full">
             <InputBox handleInputChange={handleInputChange} inputValue={inputValue} />
             <OutPutBox correcoes={correcoes} />
         </div>
