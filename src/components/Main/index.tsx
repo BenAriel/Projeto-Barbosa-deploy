@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import Buttons from './Buttons';
-import Boxes from './Boxes';
+import React, { useEffect, useState } from "react";
+import Buttons from "./Buttons";
+import Boxes from "./Boxes";
 
 interface Correcao {
     palavra: string;
@@ -9,13 +9,12 @@ interface Correcao {
 }
 
 const Main = () => {
-
     const [buttonPress, setButtonPress] = useState<boolean>(false);
     const handleButtonPress = (button: boolean) => {
         setButtonPress(true);
-    }
+    };
 
-    const [inputValue, setInputValue] = useState<string>('');
+    const [inputValue, setInputValue] = useState<string>("");
     const handleInputChange = (input: string) => {
         setInputValue(input);
     };
@@ -45,8 +44,11 @@ const Main = () => {
                     // Mapeia as correspondências para o formato da interface Correcao.
                     const correcoes: Correcao[] = data.matches.map((match: any) => ({
                         palavra: texto.substring(match.offset, match.offset + match.length),
-                        correcao: match.replacements && match.replacements.length > 0 ? match.replacements[0].value : "N/A",
-                        explicacao: match.message
+                        correcao:
+                            match.replacements && match.replacements.length > 0
+                                ? match.replacements[0].value
+                                : "N/A",
+                        explicacao: match.message,
                     }));
                     // Retorna o array de correções.
                     return correcoes;
@@ -73,11 +75,18 @@ const Main = () => {
     }, [buttonPress]); // Chama a função de efeito colateral quando buttonPress é alterado.
 
     return (
-        <div className="w-full h-full flex flex-row flex-wrap">
-            <div className="w-full">
-                <Boxes handleInputChange={handleInputChange} inputValue={inputValue} correcoes={correcoes} />
+        <div className="w-full h-[90%] flex flex-row flex-wrap">
+            <div className="w-full h-[90%]">
+                <Boxes
+                    handleInputChange={handleInputChange}
+                    inputValue={inputValue}
+                    correcoes={correcoes}
+                />
             </div>
-            <Buttons handleButtonPress={handleButtonPress} buttonPress={buttonPress} />
+            <Buttons
+                handleButtonPress={handleButtonPress}
+                buttonPress={buttonPress}
+            />
         </div>
     );
 };
