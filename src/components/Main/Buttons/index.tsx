@@ -7,11 +7,12 @@ interface ButtonsProps {
 
 const Buttons: React.FC<ButtonsProps> = ({ handleButtonPress, buttonPress }) => {
 
-    const textoCorrigido = () => { //TODO: mudar
+    const textoCorrigido = () => { //TODO: mudar para texto completamente corrigido
         return "testando algum texto corrigido";
     };
 
-    const baixarArquivoTexto = () => {
+    function baixarArquivoTexto() {
+        console.log('baixar arquivo');
         const conteudo = textoCorrigido();
         const blob = new Blob([conteudo], { type: 'text/plain' });
         const url = window.URL.createObjectURL(blob);
@@ -28,7 +29,7 @@ const Buttons: React.FC<ButtonsProps> = ({ handleButtonPress, buttonPress }) => 
         <div className="mb-10 w-full grid lg:grid-cols-3 grid-cols-1 items-center justify-items-center gap-4">
             <div className="justify-self-center">
                 <button
-                    className="flex border-2 border-black hover:bg-gray-200 font-bold py-4 px-4 rounded-lg">
+                    className="flex border-2 border-black hover:bg-gray-200 font-bold py-4 px-4 rounded-lg" >
                     <img src={"/baixar.png"} alt="Baixar" className="h-6 w-6 inline-block mr-3 transform rotate-180" />
                     <p>Upload de Arquivo de Texto</p>
                 </button>
@@ -42,7 +43,8 @@ const Buttons: React.FC<ButtonsProps> = ({ handleButtonPress, buttonPress }) => 
             </div>
             <div className="justify-self-center">
                 <button
-                    className="flex border-2 border-black hover:bg-gray-200 font-bold py-4 px-4 rounded-lg">
+                    className="flex border-2 border-black hover:bg-gray-200 font-bold py-4 px-4 rounded-lg"
+                    onClick={baixarArquivoTexto} >
                     <img src={"/baixar.png"} alt="Baixar" className="h-6 w-6 inline-block mr-3" />
                     <p>Download do Texto Corrigido</p>
                 </button>

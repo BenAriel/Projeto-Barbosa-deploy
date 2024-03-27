@@ -3,6 +3,7 @@ import Buttons from "./Buttons";
 import Boxes from "./Boxes";
 
 interface Correcao {
+    index: number;
     palavra: string;
     correcao: string;
     explicacao: string;
@@ -19,10 +20,8 @@ const Main = () => {
         setInputValue(input);
     };
 
-    // Definição do estado correções utilizando o hook useState.
     const [correcoes, setCorrecoes] = useState<Correcao[]>([]);
 
-    // Definição do efeito colateral utilizando o hook useEffect.
     useEffect(() => {
         if (!buttonPress) return;
 
@@ -36,13 +35,13 @@ const Main = () => {
                     body: `text=${encodeURIComponent(texto)}&language=pt-BR`,
                 });
 
-                // Extrai os dados da resposta da API.
                 const data = await response.json();
+                console.log(data);
 
-                // Verifica se há correspondências (erros gramaticais) na resposta da API.
                 if (data.matches && data.matches.length > 0) {
                     // Mapeia as correspondências para o formato da interface Correcao.
                     const correcoes: Correcao[] = data.matches.map((match: any) => ({
+                        index: match.offset,
                         palavra: texto.substring(match.offset, match.offset + match.length),
                         correcao:
                             match.replacements && match.replacements.length > 0
@@ -50,10 +49,9 @@ const Main = () => {
                                 : "N/A",
                         explicacao: match.message,
                     }));
-                    // Retorna o array de correções.
+                    console.log(correcoes);
                     return correcoes;
                 } else {
-                    // Retorno vazio se n tiver correção.
                     return [];
                 }
             } catch (error) {
@@ -72,7 +70,7 @@ const Main = () => {
                 console.error("Erro ao corrigir gramática:", error);
             });
         setButtonPress(false);
-    }, [buttonPress]); // Chama a função de efeito colateral quando buttonPress é alterado.
+    }, [buttonPress]);
 
     return (
         <div className="w-full h-[90%] flex flex-row flex-wrap">
