@@ -1,0 +1,26 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgba(255, 255, 255, 0.5); /* Cor de fundo branca com 0.5 de transparencia */
+    padding: 10px 20px; 
+}
+.logo-container {
+    flex-grow: 1; /* Criação do conteiner */
+    display: flex; /* Torna flex container */
+    justify-content: flex-start; 
+}
+.logo {
+    height: 50px; /* altura da imagem com largura automatica para manter a proporção */
+    margin-right: 20px; 
+}
+
+.title {
+    flex-grow: 2;
+    font-size: 2em; /* Tamanho da fonte*/
+    font-weight: bold; /* fonte negrito */
+    text-align: center; 
+}
+.spacer {
+    flex-grow: 1; /* Permite que o espaçador cresça para ocupar o espaço extra */
+}
