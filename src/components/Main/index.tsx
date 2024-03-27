@@ -35,28 +35,43 @@ const Main = () => {
                     body: `text=${encodeURIComponent(texto)}&language=pt-BR`,
                 });
 
-                const data = await response.json();
-                console.log(data);
+                const data = await response.json();    // objeto retornado da API
+                const palavrasCorrigidas: any[] = [];    // vetor de objetos para as palavras corrigidas
+                const correcoes: any[] = data.matches;    // todas as informações relevantes da API
+                const palavras: string[] = texto.split(" ");    // separa o texto de input em um vetor de palavras
+        
+                let correcoesIdx = 0;
+                palavras.forEach((p: string) => {
+                    const offset = texto.indexOf(p);    // pega o offset da palavra atual em relação ao texto original
+                    let crc, msg, pont;
 
-                if (data.matches && data.matches.length > 0) {
-                    // Mapeia as correspondências para o formato da interface Correcao.
-                    const correcoes: Correcao[] = data.matches.map((match: any) => ({
-                        index: match.offset,
-                        palavra: texto.substring(match.offset, match.offset + match.length),
-                        correcao:
-                            match.replacements && match.replacements.length > 0
-                                ? match.replacements[0].value
-                                : "N/A",
-                        explicacao: match.message,
-                    }));
-                    console.log(correcoes);
-                    return correcoes;
-                } else {
-                    return [];
-                }
+                    // compara o offset da palavra atual com o offset da palavra corrigida, se forem iguais, as palavras são mapeadas
+                    if (offset == correcoes[correcoesIdx]?.offset) {
+                        crc = correcoes[correcoesIdx].replacements[0].value;
+                        msg = correcoes[correcoesIdx].message;
+                        correcoesIdx++;
+                    }
+        
+                    // se existir pontuação na palavra, remove do atributo "palavra" e adiciona no atributo "pontuacao"
+                    const ultChar = p.slice(-1);
+                    if (",.?!".indexOf(ultChar) !== -1) {
+                        pont = ultChar;
+                        p = p.slice(0, -1);
+                    }
+
+                    // cria o objeto e adiciona no vetor de palavras corrigidas
+                    palavrasCorrigidas.push({
+                        palavra: p,
+                        correcao: crc,
+                        mensagem: msg,
+                        pontuacao: pont 
+                    });
+                });
+        
+                return palavrasCorrigidas;
+        
             } catch (error) {
                 console.error("Erro ao chamar a API do LanguageTool:", error);
-                return [];
             }
         };
 
