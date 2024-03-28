@@ -2,10 +2,10 @@ import React from "react";
 import { Popover } from 'antd';
 
 interface Correcao {
-    index: number;
     palavra: string;
-    correcao: string;
-    explicacao: string;
+    correcao?: string;
+    explicacao?: string;
+    pontuacao?: string;
 }
 
 interface BoxesProps {
@@ -60,17 +60,51 @@ const OutPutBox: React.FC<OutPutBoxProps> = ({ correcoes, inputValue }) => {
                 Correção Sugerida:
             </div>
             <div className="w-full placeholder-dinamico h-[85%] lg:h-[90%] flex-wrap text-xl px-1">
-                {correcoes.map((correcao) => {
-                    return (
-                        <React.Fragment key={correcao.index}>
-                            <Popover content={correcao.explicacao}>
-                                <span className="red-underline hover:bg-red-100 cursor-pointer">
-                                    {correcao.correcao}
-                                </span>
-                            </Popover>
-                            {' '}
-                        </React.Fragment>
-                    );
+                {correcoes.map((correcao, index) => {
+                    if (correcao.explicacao === undefined || correcao.explicacao.length === 0) {
+                        if (correcao.pontuacao !== undefined && correcao.pontuacao.length > 0) {
+                            return (
+                                <React.Fragment key={index}>
+                                    {correcao.palavra}
+                                    {correcao.pontuacao}
+                                    {' '}
+                                </React.Fragment>
+                            );
+                        } else {
+                            return (
+                                <React.Fragment key={index}>
+                                    {correcao.palavra}
+                                    {' '}
+                                </React.Fragment>
+                            );
+
+                        }
+                    } else {
+                        if (correcao.pontuacao !== undefined && correcao.pontuacao.length > 0) {
+                            return (
+                                <React.Fragment key={index}>
+                                    <Popover content={correcao.explicacao}>
+                                        <span className="red-underline hover:bg-red-100 cursor-pointer">
+                                            {correcao.correcao}
+                                        </span>
+                                    </Popover>
+                                    {correcao.pontuacao}
+                                    {' '}
+                                </React.Fragment>
+                            );
+                        } else {
+                            return (
+                                <React.Fragment key={index}>
+                                    <Popover content={correcao.explicacao}>
+                                        <span className="red-underline hover:bg-red-100 cursor-pointer">
+                                            {correcao.correcao}
+                                        </span>
+                                    </Popover>
+                                    {' '}
+                                </React.Fragment>
+                            );
+                        }
+                    }
                 })}
             </div>
         </div>
