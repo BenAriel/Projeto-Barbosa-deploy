@@ -2,27 +2,28 @@ import React from 'react';
 
 interface ButtonsProps {
     handleButtonPress: (button: boolean) => void;
-    buttonPress: boolean;
+    fixedText: string;
 };
 
-const Buttons: React.FC<ButtonsProps> = ({ handleButtonPress, buttonPress }) => {
-
-    const textoCorrigido = () => { //TODO: mudar para texto completamente corrigido
-        return "testando algum texto corrigido";
-    };
+const Buttons: React.FC<ButtonsProps> = ({ handleButtonPress, fixedText }) => {
 
     function baixarArquivoTexto() {
-        console.log('baixar arquivo');
-        const conteudo = textoCorrigido();
-        const blob = new Blob([conteudo], { type: 'text/plain' });
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'texto_corrigido.txt';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
+        const conteudo = fixedText;
+        console.log(conteudo);
+        if (!conteudo || conteudo === "" || conteudo === " " || conteudo === undefined) {
+            return alert('Não há texto corrigido para baixar!');
+        }
+        else {
+            const blob = new Blob([conteudo], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'texto_corrigido.txt';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        }
     };
 
     return (

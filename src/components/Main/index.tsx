@@ -6,7 +6,7 @@ interface Correcao {
     palavra: string;
     correcao?: string;
     explicacao?: string;
-    pontuação?: string;
+    pontuacao?: string;
 }
 
 const Main = () => {
@@ -14,6 +14,11 @@ const Main = () => {
     const handleButtonPress = (button: boolean) => {
         setButtonPress(true);
     };
+
+    const [fixedText, setFixedText] = useState<string>("");
+    const handleFixedText = (text: string) => {
+        setFixedText(text);
+    }
 
     const [inputValue, setInputValue] = useState<string>("");
     const handleInputChange = (input: string) => {
@@ -26,6 +31,16 @@ const Main = () => {
         if (!buttonPress) return;
 
         const corrigirGramatica = async (texto: string) => {
+            texto = texto.replaceAll(",", ", ");
+            texto = texto.replaceAll(".", ". ");
+            texto = texto.replaceAll(":", ": ");
+            texto = texto.replaceAll(";", "; ");
+            texto = texto.replaceAll("?", "? ");
+            texto = texto.replaceAll("!", "! ");
+            texto = texto.replaceAll("  ", " ");
+            texto = texto.trim();
+            texto += " "
+
             try {
                 const response = await fetch("https://languagetool.org/api/v2/check", {
                     method: "POST",
@@ -36,44 +51,57 @@ const Main = () => {
                 });
 
                 const data = await response.json();    // objeto retornado da API
-                const palavrasCorrigidas: any[] = [];    // vetor de objetos para as palavras corrigidas
-                const correcoesTemp: any[] = data.matches;    // todas as informações relevantes da API
-                const palavras: string[] = texto.split("[\\ \\,\\.\\?\\!]");    // separa o texto de input em um vetor de palavras
+                const palavrasCorrigidas: Correcao[] = [];    // vetor de objetos para as palavras corrigidas
+                const correcoesTemp = data.matches;    // todas as informações relevantes da API
 
-                let correcoesTempIdx = 0;
-                let tamanhoExcluido = 0;
-                palavras.forEach((p: string) => {
-                    const offset = texto.indexOf(p) + tamanhoExcluido;    // pega o offset da palavra atual em relação ao texto original
-                    console.log("Palavra:", p);
-                    console.log("Offset:", offset);
-                    let crc, msg, pont;
-
-                    // // se existir pontuação na palavra, remove do atributo "palavra" e adiciona no atributo "pontuacao"
-                    // const ultChar = p.slice(-1);
-                    // if (",.?!".indexOf(ultChar) !== -1) {
-                    //     pont = ultChar;
-                    //     p = p.slice(0, -1);
-                    // }
-
-                    // compara o offset da palavra atual com o offset da palavra corrigida, se forem iguais, as palavras são mapeadas
-                    if (offset == correcoesTemp[correcoesTempIdx]?.offset) {
-                        crc = correcoesTemp[correcoesTempIdx].replacements[0].value;
-                        msg = correcoesTemp[correcoesTempIdx].message;
-                        correcoesTempIdx++;
-                    }
-
-                    // cria o objeto e adiciona no vetor de palavras corrigidas
+                texto.split(" ").forEach((palavra: string) => {
                     palavrasCorrigidas.push({
-                        palavra: p,
-                        correcao: crc,
-                        explicacao: msg,
-                        pontuacao: pont
+                        palavra: palavra,
+                        correcao: undefined,
+                        explicacao: undefined,
+                        pontuacao: undefined,
                     });
-
-                    texto = texto.slice(p.length + 1);
-                    tamanhoExcluido += p.length + 1;
                 });
 
+                correcoesTemp.forEach((obj: any) => {
+                    const interval = obj.offset + obj.length;
+
+                    let substr: string = texto.substring(obj.offset, interval + 1);
+
+                    const parte1 = texto.slice(0, obj.offset);
+                    const parte2 = texto.slice(interval);
+
+                    texto = parte1 + obj.replacements[0].value + parte2;
+
+                    let ptn: string = "";
+                    const temp: string = ",.:;?!";
+                    if (temp.includes(substr[substr.length - 1])) {
+                        ptn = substr[substr.length - 1];
+                    }
+
+                    let palavraObj: Correcao = {
+                        palavra: "",
+                        correcao: undefined,
+                        explicacao: undefined,
+                        pontuacao: undefined,
+                    };
+
+                    for (let palavra of palavrasCorrigidas) {
+                        if (palavra.palavra === substr.trim()) {
+                            palavra.correcao = obj.replacements[0].value;
+                            palavra.explicacao = obj.message;
+                            palavra.pontuacao = ptn;
+                            palavraObj = palavra;
+                            break;
+                        }
+                    }
+
+                    substr = substr.substring(0, substr.length - 1);
+                    palavraObj.palavra = substr;
+
+                });
+
+                handleFixedText(texto);
                 return palavrasCorrigidas;
 
             } catch (error) {
@@ -104,7 +132,7 @@ const Main = () => {
             </div>
             <Buttons
                 handleButtonPress={handleButtonPress}
-                buttonPress={buttonPress}
+                fixedText={fixedText}
             />
         </div>
     );

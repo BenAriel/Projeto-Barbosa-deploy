@@ -25,16 +25,14 @@ interface OutPutBoxProps {
 }
 
 const InputBox: React.FC<InputBoxProps> = ({ handleInputChange, inputValue }) => {
-    const handleChange: React.ChangeEventHandler<HTMLTextAreaElement> = (
-        event
-    ) => {
+    const handleChange: React.ChangeEventHandler<HTMLTextAreaElement> = (event) => {
         handleInputChange(event.target.value);
     };
 
     return (
         <div className="w-[75%] lg:w-1/2 h-[100%] border-2 border-gray-700 mx-8 bg-gray-200">
             {" "}
-            <div className="w-full h-[15%] lg:h-[10%] border-b-2 border-gray-700 flex justify-center items-center font-bold text-xl bg-white">
+            <div className="w-full h-[15%] md:h-[10%] lg:h-[10%] border-b-2 border-gray-700 flex justify-center items-center font-bold text-xl bg-white">
                 Digite seu Texto:
             </div>
             <div className="w-full h-[85%] lg:h-[90%] bg-gray-200">
@@ -56,7 +54,7 @@ const OutPutBox: React.FC<OutPutBoxProps> = ({ correcoes, inputValue }) => {
 
     return (
         <div className="w-[75%] lg:w-1/2 h-[100%] border-2 border-gray-700 mx-8 bg-gray-200">
-            <div className="w-full h-[15%] lg:h-[10%] border-b-2 border-gray-700 flex justify-center items-center font-bold text-xl bg-white">
+            <div className="w-full h-[15%] md:h-[10%] lg:h-[10%] border-b-2 border-gray-700 flex justify-center items-center font-bold text-xl bg-white">
                 Correção Sugerida:
             </div>
             <div className="w-full placeholder-dinamico h-[85%] lg:h-[90%] flex-wrap text-xl px-1">

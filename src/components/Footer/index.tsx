@@ -2,7 +2,8 @@ import React from 'react';
 
 const Logo = () => {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" width="173" height="154" fill="none" viewBox="0 0 173 154">
+        <svg xmlns="http://www.w3.org/2000/svg" width="173" height="154" fill="none" viewBox="0 0 173 154"
+            className="mt-3">
             <rect width="173" height="154" fill="url(#a)" rx="37" />
             <defs>
                 <pattern id="a" width="1" height="1" patternContentUnits="objectBoundingBox">
@@ -17,9 +18,9 @@ const Logo = () => {
 const Footer = () => {
     return (
         <div className="bg-gradient-to-r from-purple-950 from-40% to-purple-600 text-white">
-            <div className="grid grid-cols-3 gap-12 mx-16 mt-2 py-4">
-                <div className="flex flex-col gap-3 py-16">
-                    <h1 className="text-4xl mb-12">Contatos</h1>
+            <div className="flex flex-col items-center lg:grid lg:grid-cols-3 lg:gap-12 mx-16 mt-2 py-4">
+                <div className="flex flex-col gap-3 py-16 pb-6 lg:pb-16 order-2 lg:order-1">
+                    <h1 className="text-4xl text-center lg:text-left mb-3 lg:mb-12">Contatos</h1>
                     <div className="ml-2 flex flex-col space-y-1 text-lg font-semibold">
                         <div className="flex items-center">
                             <img src={"/Instagram.png"} alt="Instagram da Lotús" className="w-7 h-7" />
@@ -31,20 +32,20 @@ const Footer = () => {
                         </div>
                     </div>
                 </div>
-                <div className="flex flex-col justify-center items-center text-center font-light">
+                <div className="flex flex-col justify-center items-center text-center font-light order-1 lg:order-2 mt-8 lg:mt-0">
                     <h1 className="text-5xl">Lótus Tecno</h1>
                     <h2 className="mt-2 text-xl">Empresa Júnior de Computação</h2>
                     <Logo />
                 </div>
-                <div className="justify-self-end text-right py-16">
-                    <h1 className="text-4xl mb-12">Localização</h1>
-                    <div className="flex flex-row items-center justify-end mr-2 gap-4">
-                        <div className="justify-center text-lg">
+                <div className="justify-self-end text-right py-16 order-3">
+                    <h1 className="text-4xl text-center lg:text-right mb-8 lg:mb-12">Localização</h1>
+                    <div className="flex flex-col lg:flex-row items-center lg:justify-end mr-2 gap-4">
+                        <div className="justify-center text-center lg:text-right text-lg order-2 lg:order-1">
                             <p>Av. Francisco Mota, 572</p>
                             <p>Bairro Costa e Silva, Mossoró RN</p>
                             <p>CEP: 59.625-900</p>
                         </div>
-                        <img src={"/UfersaLogo.png"} alt="Logo da Ufersa" className="" />
+                        <img src={"/UfersaLogo.png"} alt="Logo da Ufersa" className="order-1 lg:order-2" />
                     </div>
                 </div>
             </div>
