@@ -17,7 +17,7 @@ const Logo = () => {
 
 const Footer = () => {
     return (
-        <div className="bg-gradient-to-r from-purple-950 from-40% to-purple-600 text-white">
+        <div className="bg-gradient-to-r from-[#29172F] from-40% to-[#5F346F] text-white">
             <div className="flex flex-col items-center lg:grid lg:grid-cols-3 lg:gap-12 mx-16 mt-2 py-4">
                 <div className="flex flex-col gap-3 py-16 pb-6 lg:pb-16 order-2 lg:order-1">
                     <h1 className="text-4xl text-center lg:text-left mb-3 lg:mb-12">Contatos</h1>
