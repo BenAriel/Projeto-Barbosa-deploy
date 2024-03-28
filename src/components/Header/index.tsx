@@ -1,15 +1,13 @@
 import React from 'react';
-import './Header.css'; // Importando o CSS
 
 const Header = () => {
     return (
-        <header className="header">
-             <div className="logo-container">
-            <img src="img\imagem.png" alt="Logo" className="logo"/>
+        <header className="flex items-center justify-between bg-gray-200 p-3 mb-10">
+            <img src="\LotusLogo2.png" alt="Logo" className="h-12 ml-4" />
+            <div className="flex-grow flex items-center justify-center">
+                <h1 className="text-4xl font-bold text-center pr-8">Projeto-Barbosa</h1>
             </div>
-            <h1 className="title">Projeto-Barbosa</h1>
-            <div className="spacer"></div> {/* Espaçador para equilibrar o layout */}
-        
+            <div></div> {/* Empty div to balance the space */}
         </header>
     );
 };
