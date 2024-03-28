@@ -33,7 +33,7 @@ const Footer = () => {
                     </div>
                 </div>
                 <div className="flex flex-col justify-center items-center text-center font-light order-1 lg:order-2 mt-8 lg:mt-0">
-                    <h1 className="text-5xl">Lótus Tecno</h1>
+                    <h1 className="text-5xl">Lótus Tech</h1>
                     <h2 className="mt-2 text-xl">Empresa Júnior de Computação</h2>
                     <Logo />
                 </div>
