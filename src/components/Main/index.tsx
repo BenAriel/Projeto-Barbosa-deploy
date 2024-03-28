@@ -15,11 +15,6 @@ const Main = () => {
         setButtonPress(true);
     };
 
-    const [fixedText, setFixedText] = useState<string>("");
-    const handleFixedText = (text: string) => {
-        setFixedText(text);
-    }
-
     const [inputValue, setInputValue] = useState<string>("");
     const handleInputChange = (input: string) => {
         setInputValue(input);
@@ -68,11 +63,6 @@ const Main = () => {
 
                     let substr: string = texto.substring(obj.offset, interval + 1);
 
-                    const parte1 = texto.slice(0, obj.offset);
-                    const parte2 = texto.slice(interval);
-
-                    texto = parte1 + obj.replacements[0].value + parte2;
-
                     let ptn: string = "";
                     const temp: string = ",.:;?!";
                     if (temp.includes(substr[substr.length - 1])) {
@@ -101,7 +91,6 @@ const Main = () => {
 
                 });
 
-                handleFixedText(texto);
                 return palavrasCorrigidas;
 
             } catch (error) {
@@ -119,7 +108,7 @@ const Main = () => {
                 console.error("Erro ao corrigir gramática:", error);
             });
         setButtonPress(false);
-    }, [buttonPress]);
+    }, [buttonPress, inputValue]);
 
     return (
         <div className="w-full h-[90%] flex flex-row flex-wrap">
@@ -132,7 +121,7 @@ const Main = () => {
             </div>
             <Buttons
                 handleButtonPress={handleButtonPress}
-                fixedText={fixedText}
+                correcoes={correcoes}
             />
         </div>
     );

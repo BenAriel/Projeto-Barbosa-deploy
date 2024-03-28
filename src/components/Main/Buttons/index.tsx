@@ -1,15 +1,37 @@
 import React from 'react';
 
+interface Correcao {
+    palavra: string;
+    correcao?: string;
+    explicacao?: string;
+    pontuacao?: string;
+}
+
 interface ButtonsProps {
     handleButtonPress: (button: boolean) => void;
-    fixedText: string;
+    correcoes: Correcao[];
 };
 
-const Buttons: React.FC<ButtonsProps> = ({ handleButtonPress, fixedText }) => {
+const Buttons: React.FC<ButtonsProps> = ({ handleButtonPress, correcoes }) => {
 
     function baixarArquivoTexto() {
-        const conteudo = fixedText;
-        console.log(conteudo);
+
+        const conteudo: string = correcoes.map(correcao => {
+            if (!correcao.pontuacao || correcao.pontuacao === "" || correcao.pontuacao === " " || correcao.pontuacao === undefined) {
+                if (!correcao.correcao || correcao.correcao === "" || correcao.correcao === " " || correcao.correcao === undefined) {
+                    return correcao.palavra;
+                } else {
+                    return correcao.correcao;
+                }
+            } else {
+                if (!correcao.correcao || correcao.correcao === "" || correcao.correcao === " " || correcao.correcao === undefined) {
+                    return correcao.palavra + correcao.pontuacao;
+                } else {
+                    return correcao.correcao + correcao.pontuacao;
+                }
+            }
+        }).join(" ");
+
         if (!conteudo || conteudo === "" || conteudo === " " || conteudo === undefined) {
             return alert('Não há texto corrigido para baixar!');
         }
