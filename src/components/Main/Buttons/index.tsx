@@ -26,7 +26,7 @@ const Buttons: React.FC<ButtonsProps> = ({ handleButtonPress, buttonPress }) => 
     };
 
     return (
-        <div className="mb-10 w-full grid lg:grid-cols-3 grid-cols-1 items-center justify-items-center gap-4">
+        <div className="w-full grid lg:grid-cols-3 grid-cols-1 items-center justify-items-center gap-4">
             <div className="justify-self-center">
                 <button
                     className="flex border-2 border-black hover:bg-gray-200 font-bold py-4 px-4 rounded-lg" >
