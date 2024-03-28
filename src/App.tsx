@@ -7,10 +7,12 @@ import Footer from "./components/Footer";
 
 function App() {
     return (
-        <div className="h-screen">
-            <Header />
-            <div className="mx-8 h-[90%]">
-                <Main />
+        <div className="flex flex-col gap-36 lg:gap-2">
+            <div className="h-screen">
+                <Header />
+                <div className="mx-8 h-[90%]">
+                    <Main />
+                </div>
             </div>
             <Footer />
         </div>
