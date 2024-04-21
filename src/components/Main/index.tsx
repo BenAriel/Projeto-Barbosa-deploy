@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Boxes from "./Boxes";
 import OpenAI from "openai";
-import dotenv from "dotenv";
 
-dotenv.config(); // Carrega variáveis de ambiente do arquivo .env
 
 const Main = () => {
     const [inputValue, setInputValue] = useState<string>("");
@@ -15,7 +13,7 @@ const Main = () => {
     const handleCorrection = async () => {
         const texto = inputValue.trim();
 
-        const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY }); // Use a chave de API do ambiente
+        const openai = new OpenAI();
 
         if (texto !== "") {
             try {
