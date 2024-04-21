@@ -26,7 +26,6 @@ const Main = () => {
 
     const requestChatGPTResponse = async (texto: string) => {
         try {
-            const OPENAI_API_KEY = "sk-proj-zz1mViaJ44kziGXL0YjXT3BlbkFJ4XDuuwonG9veLXOBNBvz";
             const mensagem = `Corrija os erros gramaticais e de coesão no texto e diga quais palavras foram mudadas.Correção deve ser no estilo:palavra-correção-quebra de linha.Texto: ${texto}`;
             const response = await fetch("https://api.openai.com/v1/chat/completions", {
                 method: "POST",
