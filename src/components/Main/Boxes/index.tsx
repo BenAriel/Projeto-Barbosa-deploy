@@ -39,7 +39,7 @@ const OutPutBox: React.FC<Pick<BoxesProps, "chatGPTResponse">> = ({ chatGPTRespo
                 {chatGPTResponse !== null ? (
                     <span>{chatGPTResponse}</span>
                 ) : (
-                    <span>Nenhuma resposta do ChatGPT disponível.</span>
+                    <span>Nada.</span>
                 )}
             </div>
         </div>
