@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Boxes from "./Boxes";
+import OpenAI from "openai";
+import dotenv from "dotenv";
+
+dotenv.config(); // Carrega variáveis de ambiente do arquivo .env
 
 const Main = () => {
     const [inputValue, setInputValue] = useState<string>("");
@@ -8,48 +12,32 @@ const Main = () => {
         setInputValue(input);
     };
 
-    const handleCorrection = () => {
+    const handleCorrection = async () => {
         const texto = inputValue.trim();
 
-        if (texto !== "") {
-            requestChatGPTResponse(texto)
-                .then((response) => {
-                    console.log("Resposta do ChatGPT:", response);
-                    // Atualize o estado com a resposta do ChatGPT
-                    // setChatGPTResponse(response);
-                })
-                .catch((error) => {
-                    console.error("Erro ao obter resposta do ChatGPT:", error);
-                });
-        }
-    };
+        const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY }); // Use a chave de API do ambiente
 
-    const requestChatGPTResponse = async (texto: string) => {
-        try {
-            const mensagem = `Corrija os erros gramaticais e de coesão no texto e diga quais palavras foram mudadas.Correção deve ser no estilo:palavra-correção-quebra de linha.Texto: ${texto}`;
-            const response = await fetch("https://api.openai.com/v1/chat/completions", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${OPENAI_API_KEY}`
-                },
-                body: JSON.stringify({
-                    model: "gpt-3.5-turbo",
+        if (texto !== "") {
+            try {
+                const completion = await openai.chat.completions.create({
                     messages: [
                         {
-                            role: "user",
-                            content: mensagem
-                        }
-                    ]
-                })
-            });
+                            role: "system",
+                            content: "Você é um assistente de correção de texto, identifique erros gramaticais, sugira reorganização de ideias e adaptações para tornar o texto mais compreensível. Retorne, além do texto original e corrigido, um objeto JSON com todas as palavras que foram corrigidas, cada palavra seguida de sua correção.",
+                        },
+                        { role: "user", content: texto },
+                    ],
+                    model: "gpt-3.5-turbo",
+                    response_format: { type: "json_object" },
+                });
 
-            const data = await response.json();
-            const chatGPTResponse = data.choices[0].message.content; // Obter a resposta do ChatGPT
-            return chatGPTResponse;
-        } catch (error) {
-            console.error("Erro ao chamar a API do ChatGPT:", error);
-            throw error;
+                const chatGPTResponse = completion.choices[0]?.message?.content;
+                console.log("Resposta do ChatGPT:", chatGPTResponse);
+                // Aqui você pode atualizar o estado ou fazer algo com a resposta do ChatGPT
+
+            } catch (error) {
+                console.error("Erro ao obter resposta do ChatGPT:", error);
+            }
         }
     };
 
@@ -59,7 +47,7 @@ const Main = () => {
                 <Boxes
                     handleInputChange={handleInputChange}
                     inputValue={inputValue}
-                    chatGPTResponse={null} // Adicione a prop chatGPTResponse
+                    chatGPTResponse={null}
                 />
             </div>
             <div className="w-full flex justify-center mt-4">
