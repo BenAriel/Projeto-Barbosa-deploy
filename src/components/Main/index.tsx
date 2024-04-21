@@ -1,114 +1,58 @@
 import React, { useEffect, useState } from "react";
-import Buttons from "./Buttons";
 import Boxes from "./Boxes";
 
-interface Correcao {
-    palavra: string;
-    correcao?: string;
-    explicacao?: string;
-    pontuacao?: string;
-}
-
 const Main = () => {
-    const [buttonPress, setButtonPress] = useState<boolean>(false);
-    const handleButtonPress = (button: boolean) => {
-        setButtonPress(true);
-    };
-
     const [inputValue, setInputValue] = useState<string>("");
+
     const handleInputChange = (input: string) => {
         setInputValue(input);
     };
 
-    const [correcoes, setCorrecoes] = useState<Correcao[]>([]);
+    const handleCorrection = () => {
+        const texto = inputValue.trim();
 
-    useEffect(() => {
-        if (!buttonPress) return;
-
-        const corrigirGramatica = async (texto: string) => {
-            texto = texto.replaceAll(",", ", ");
-            texto = texto.replaceAll(".", ". ");
-            texto = texto.replaceAll(":", ": ");
-            texto = texto.replaceAll(";", "; ");
-            texto = texto.replaceAll("?", "? ");
-            texto = texto.replaceAll("!", "! ");
-            texto = texto.replaceAll("  ", " ");
-            texto = texto.trim();
-            texto += " "
-
-            try {
-                const response = await fetch("https://languagetool.org/api/v2/check", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                    },
-                    body: `text=${encodeURIComponent(texto)}&language=pt-BR`,
+        if (texto !== "") {
+            requestChatGPTResponse(texto)
+                .then((response) => {
+                    console.log("Resposta do ChatGPT:", response);
+                    // Atualize o estado com a resposta do ChatGPT
+                    // setChatGPTResponse(response);
+                })
+                .catch((error) => {
+                    console.error("Erro ao obter resposta do ChatGPT:", error);
                 });
+        }
+    };
 
-                const data = await response.json();    // objeto retornado da API
-                const palavrasCorrigidas: Correcao[] = [];    // vetor de objetos para as palavras corrigidas
-                const correcoesTemp = data.matches;    // todas as informações relevantes da API
-
-                texto.split(" ").forEach((palavra: string) => {
-                    palavrasCorrigidas.push({
-                        palavra: palavra,
-                        correcao: undefined,
-                        explicacao: undefined,
-                        pontuacao: undefined,
-                    });
-                });
-
-                correcoesTemp.forEach((obj: any) => {
-                    const interval = obj.offset + obj.length;
-
-                    let substr: string = texto.substring(obj.offset, interval + 1);
-
-                    let ptn: string = "";
-                    const temp: string = ",.:;?!";
-                    if (temp.includes(substr[substr.length - 1])) {
-                        ptn = substr[substr.length - 1];
-                    }
-
-                    let palavraObj: Correcao = {
-                        palavra: "",
-                        correcao: undefined,
-                        explicacao: undefined,
-                        pontuacao: undefined,
-                    };
-
-                    for (let palavra of palavrasCorrigidas) {
-                        if (palavra.palavra === substr.trim()) {
-                            palavra.correcao = obj.replacements[0].value;
-                            palavra.explicacao = obj.message;
-                            palavra.pontuacao = ptn;
-                            palavraObj = palavra;
-                            break;
+    const requestChatGPTResponse = async (texto: string) => {
+        try {
+            const OPENAI_API_KEY = "sk-proj-zz1mViaJ44kziGXL0YjXT3BlbkFJ4XDuuwonG9veLXOBNBvz";
+            const mensagem = `Corrija os erros gramaticais e de coesão no texto e diga quais palavras foram mudadas.Correção deve ser no estilo:palavra-correção-quebra de linha.Texto: ${texto}`;
+            const response = await fetch("https://api.openai.com/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${OPENAI_API_KEY}`
+                },
+                body: JSON.stringify({
+                    model: "gpt-3.5-turbo",
+                    messages: [
+                        {
+                            role: "user",
+                            content: mensagem
                         }
-                    }
-
-                    substr = substr.substring(0, substr.length - 1);
-                    palavraObj.palavra = substr;
-
-                });
-
-                return palavrasCorrigidas;
-
-            } catch (error) {
-                console.error("Erro ao chamar a API do LanguageTool:", error);
-            }
-        };
-
-        const texto = inputValue;
-        corrigirGramatica(texto)
-            .then((palavrasCorrigidas) => {
-                setCorrecoes(palavrasCorrigidas as Correcao[]); //TODO: check if there are errors with the type casting
-                //console.log("Correções:", palavrasCorrigidas)
-            })
-            .catch((error) => {
-                console.error("Erro ao corrigir gramática:", error);
+                    ]
+                })
             });
-        setButtonPress(false);
-    }, [buttonPress, inputValue]);
+
+            const data = await response.json();
+            const chatGPTResponse = data.choices[0].message.content; // Obter a resposta do ChatGPT
+            return chatGPTResponse;
+        } catch (error) {
+            console.error("Erro ao chamar a API do ChatGPT:", error);
+            throw error;
+        }
+    };
 
     return (
         <div className="w-full h-[90%] flex flex-row flex-wrap">
@@ -116,13 +60,17 @@ const Main = () => {
                 <Boxes
                     handleInputChange={handleInputChange}
                     inputValue={inputValue}
-                    correcoes={correcoes}
+                    chatGPTResponse={null} // Adicione a prop chatGPTResponse
                 />
             </div>
-            <Buttons
-                handleButtonPress={handleButtonPress}
-                correcoes={correcoes}
-            />
+            <div className="w-full flex justify-center mt-4">
+                <button
+                    onClick={handleCorrection}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
+                    Corrigir Texto
+                </button>
+            </div>
         </div>
     );
 };
