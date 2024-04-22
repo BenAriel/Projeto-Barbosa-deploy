@@ -1,130 +1,135 @@
-import React, { useEffect, useState } from "react";
-import Buttons from "./Buttons";
+import React, { useState } from "react";
 import Boxes from "./Boxes";
+import Buttons from "./Buttons";
 
-interface Correcao {
-    palavra: string;
-    correcao?: string;
-    explicacao?: string;
-    pontuacao?: string;
+type Palavra = {
+    Palavra: string;
+    PalavraCorrigida: string;
+    explicacao: string;
+    indice: number;
+};
+
+type Response = {
+    FraseOriginal: string;
+    FraseCorrigida: string;
+    Palavras: Palavra[];
 }
 
 const Main = () => {
-    const [buttonPress, setButtonPress] = useState<boolean>(false);
-    const handleButtonPress = (button: boolean) => {
-        setButtonPress(true);
-    };
 
     const [inputValue, setInputValue] = useState<string>("");
     const handleInputChange = (input: string) => {
         setInputValue(input);
     };
 
-    const [correcoes, setCorrecoes] = useState<Correcao[]>([]);
+    const handleCorrection = async () => {
+        setIsLoading(true);
+        const texto = inputValue.trim();
 
-    useEffect(() => {
-        if (!buttonPress) return;
+        if (texto !== "") {
+            const seed = 60;
+            const temperatura = 0.01;
+            const requestBody = {
+                messages: [
+                    {
+                        role: "system",
+                        content: "Você é um assistente de correção de texto. Identifique erros gramaticais, sugira reorganização de ideias e adaptações para tornar o texto mais compreensível. Retorne um objeto JSON que contém a frase original, a frase corrigida, todas as palavras da frase, indice da palavra e a explicação da mudança na palavra. A estrutura do JSON deve seguir essa estrutura: {FraseOriginal: string, FraseCorrigida: string, Palavras: [{Palavra: string, PalavraCorrigida: string(se não tiver correção deixe vazio), explicacao: string, indice: number}]}. ",
+                    },
+                    { role: "user", content: texto },
+                ],
+                model: "gpt-3.5-turbo-1106",
+                response_format: { type: "json_object" },
+                temperature: temperatura,
+                seed: seed,
+            };
 
-        const corrigirGramatica = async (texto: string) => {
-            texto = texto.replaceAll(",", ", ");
-            texto = texto.replaceAll(".", ". ");
-            texto = texto.replaceAll(":", ": ");
-            texto = texto.replaceAll(";", "; ");
-            texto = texto.replaceAll("?", "? ");
-            texto = texto.replaceAll("!", "! ");
-            texto = texto.replaceAll("  ", " ");
-            texto = texto.trim();
-            texto += " "
+            const requestOptions = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization:
+                        "Bearer sk-proj-zszOcjQ1JgWoFawgbYA0T3BlbkFJIycGYBw2YELQx6IR7qaE",
+                },
+                body: JSON.stringify(requestBody),
+            };
 
             try {
-                const response = await fetch("https://languagetool.org/api/v2/check", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                    },
-                    body: `text=${encodeURIComponent(texto)}&language=pt-BR`,
-                });
+                const fetchResponse = await fetch(
+                    "https://api.openai.com/v1/chat/completions",
+                    requestOptions
+                );
+                const data: any = await fetchResponse.json();
+                const chatGPTResponse = data.choices[0]?.message?.content;
 
-                const data = await response.json();    // objeto retornado da API
-                const palavrasCorrigidas: Correcao[] = [];    // vetor de objetos para as palavras corrigidas
-                const correcoesTemp = data.matches;    // todas as informações relevantes da API
+                if (chatGPTResponse === undefined) {
+                    setChatGPTResponse("Erro ao obter resposta do ChatGPT");
+                }
 
-                texto.split(" ").forEach((palavra: string) => {
-                    palavrasCorrigidas.push({
-                        palavra: palavra,
-                        correcao: undefined,
-                        explicacao: undefined,
-                        pontuacao: undefined,
-                    });
-                });
+                const response: Response = JSON.parse(chatGPTResponse);
 
-                correcoesTemp.forEach((obj: any) => {
-                    const interval = obj.offset + obj.length;
+                //console.log("Frase original:", response.FraseOriginal);
+                //console.log("Frase corrigida:", response.FraseCorrigida);
+                //console.log("Palavras:", response.Palavras);
 
-                    let substr: string = texto.substring(obj.offset, interval + 1);
-
-                    let ptn: string = "";
-                    const temp: string = ",.:;?!";
-                    if (temp.includes(substr[substr.length - 1])) {
-                        ptn = substr[substr.length - 1];
-                    }
-
-                    let palavraObj: Correcao = {
-                        palavra: "",
-                        correcao: undefined,
-                        explicacao: undefined,
-                        pontuacao: undefined,
-                    };
-
-                    for (let palavra of palavrasCorrigidas) {
-                        if (palavra.palavra === substr.trim()) {
-                            palavra.correcao = obj.replacements[0].value;
-                            palavra.explicacao = obj.message;
-                            palavra.pontuacao = ptn;
-                            palavraObj = palavra;
-                            break;
-                        }
-                    }
-
-                    substr = substr.substring(0, substr.length - 1);
-                    palavraObj.palavra = substr;
-
-                });
-
-                return palavrasCorrigidas;
+                // Update the state with the API response
+                setChatGPTResponse(response.FraseCorrigida);
+                setResponse(response.Palavras);
 
             } catch (error) {
-                console.error("Erro ao chamar a API do LanguageTool:", error);
+                console.error("Error when getting response from ChatGPT:", error);
             }
-        };
+        }
+        setIsLoading(false);
+    };
 
-        const texto = inputValue;
-        corrigirGramatica(texto)
-            .then((palavrasCorrigidas) => {
-                setCorrecoes(palavrasCorrigidas as Correcao[]); //TODO: check if there are errors with the type casting
-                //console.log("Correções:", palavrasCorrigidas)
-            })
-            .catch((error) => {
-                console.error("Erro ao corrigir gramática:", error);
-            });
-        setButtonPress(false);
-    }, [buttonPress, inputValue]);
+    const [chatGPTResponse, setChatGPTResponse] = useState<string | null>(null);
+
+    const [response, setResponse] = useState<Palavra[] | null>(null);
+
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const [fileUpload, setFileUpload] = useState<File | null>(null);
+    const [fileUploadText, setFileUploadText] = useState<string | null>(null);
+    const handleFileUpload = (file: File) => {
+        setFileUpload(file);
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            const text = reader.result as string;
+            setFileUploadText(text);
+            setChatGPTResponse(null);
+            //console.log("Texto do arquivo:", text);
+        };
+        reader.readAsText(file);
+    };
+
 
     return (
         <div className="w-full h-[90%] flex flex-row flex-wrap">
             <div className="w-full h-[90%]">
-                <Boxes
-                    handleInputChange={handleInputChange}
-                    inputValue={inputValue}
-                    correcoes={correcoes}
-                />
+                {fileUploadText !== null ? (
+                    <Boxes
+                        key={fileUploadText}
+                        handleInputChange={handleInputChange}
+                        chatGPTResponse={chatGPTResponse}
+                        uploadText={fileUploadText}
+                        palavras={response}
+                    />
+                ) : (
+                    <Boxes
+                        key={fileUploadText}
+                        handleInputChange={handleInputChange}
+                        chatGPTResponse={chatGPTResponse}
+                        palavras={response}
+                    />
+                )}
             </div>
-            <Buttons
-                handleButtonPress={handleButtonPress}
-                correcoes={correcoes}
-            />
+            <div className="w-full flex justify-center mt-4">
+                <Buttons handleCorrection={handleCorrection} isLoading={isLoading} setFileUpload={handleFileUpload} />
+            </div>
         </div>
     );
+
 };
 
 export default Main;
