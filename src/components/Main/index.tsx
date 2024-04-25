@@ -125,7 +125,11 @@ const Main = () => {
                 )}
             </div>
             <div className="w-full flex justify-center mt-4">
-                <Buttons handleCorrection={handleCorrection} isLoading={isLoading} setFileUpload={handleFileUpload} />
+                <Buttons
+                    handleCorrection={handleCorrection}
+                    isLoading={isLoading}
+                    setFileUpload={handleFileUpload}
+                    fullText={chatGPTResponse} />
             </div>
         </div>
     );

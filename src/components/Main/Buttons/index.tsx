@@ -4,12 +4,20 @@ interface ButtonsProps {
     handleCorrection: () => void;
     isLoading: boolean;
     setFileUpload: (file: File) => void;
+    fullText?: string | null;
 };
 
-const Buttons: React.FC<ButtonsProps> = ({ handleCorrection, isLoading, setFileUpload }) => {
+const Buttons: React.FC<ButtonsProps> = ({ handleCorrection, isLoading, setFileUpload, fullText }) => {
 
     function baixarArquivoTexto() {
-
+        if (!fullText) return;
+        const response = fullText; // replace with your actual text
+        const element = document.createElement("a");
+        const file = new Blob([response], { type: 'text/plain' });
+        element.href = URL.createObjectURL(file);
+        element.download = "myFile.txt";
+        document.body.appendChild(element); // Required for this to work in FireFox
+        element.click();
     };
 
     function upload() {
@@ -24,7 +32,7 @@ const Buttons: React.FC<ButtonsProps> = ({ handleCorrection, isLoading, setFileU
             setFileUpload(file);
         };
         input.click();
-    }
+    };
 
 
     return (
