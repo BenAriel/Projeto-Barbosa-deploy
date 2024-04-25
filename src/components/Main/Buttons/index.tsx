@@ -48,9 +48,10 @@ const Buttons: React.FC<ButtonsProps> = ({ handleCorrection, isLoading, setFileU
             <div>
                 <button
                     onClick={() => handleCorrection()}
-                    className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-7 rounded-lg ${isLoading ? 'cursor-progress' : 'cursor-pointer'}`}
+                    className={`text-white font-bold py-4 px-7 rounded-lg bg-blue-500 hover:bg-blue-700
+                    ${isLoading ? 'cursor-progress bg-gray-500 hover:bg-gray-700' : 'cursor-pointerbg-blue-500 hover:bg-blue-700'}`}
                     disabled={isLoading} >
-                    Corrigir Texto
+                    {isLoading ? 'Corrigindo...' : 'Corrigir Texto'}
                 </button>
             </div>
             <div className="justify-self-center">

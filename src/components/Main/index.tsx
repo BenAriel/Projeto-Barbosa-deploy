@@ -26,6 +26,11 @@ const Main = () => {
         setIsLoading(true);
         const texto = inputValue.trim();
 
+        //TODO - check necessity of this validation
+        //if (texto === "" || texto === null) {
+        //alert("Por favor, insira um texto para ser corrigido.");
+        //}
+
         if (texto !== "") {
             const seed = 60;
             const temperatura = 0.01;
