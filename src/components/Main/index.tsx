@@ -12,17 +12,17 @@ const Main = () => {
     const texto = inputValue.trim();
 
     if (texto !== "") {
-      const seed = 1;
+      const seed = 60;
       const temperatura = 0.01; 
       const requestBody = {
         messages: [
           {
             role: "system",
-            content: "Você é um assistente de correção de texto, identifique erros gramaticais, sugira reorganização de ideias e adaptações para tornar o texto mais compreensível. Retorne, além do texto original e corrigido, um objeto JSON com todas as palavras que foram corrijidas, cada palavra seguida de sua correção.",
+            content: "Você é um assistente de correção de texto. Identifique erros gramaticais, sugira reorganização de ideias e adaptações para tornar o texto mais compreensível. Retorne um objeto JSON que contém a frase original, a frase corrigida,todas as palavras da frase e o indice da palavra. A estrutura do JSON deve seguir essa estrutura: {FraseOriginal: string, FraseCorrigida: string, Palavras: [{Palavra: string,PalavraCorrigida:string(se não tiver correção deixe vazio), indice: number}]}.",
           },
           { role: "user", content: texto },
         ],
-        model: "gpt-3.5-turbo",
+        model: "gpt-3.5-turbo-1106",
         response_format: { type: "json_object" },
         temperature: temperatura,
          seed: seed,
@@ -33,7 +33,7 @@ const Main = () => {
         headers: {
           "Content-Type": "application/json",
           Authorization:
-            "Bearer sk-proj-ZRyqX0aGqI0eDw7K95baT3BlbkFJRWEdJDOBza4KUxcJ7h0x",
+            "Bearer sk-proj-zszOcjQ1JgWoFawgbYA0T3BlbkFJIycGYBw2YELQx6IR7qaE",
         },
         body: JSON.stringify(requestBody),
       };
