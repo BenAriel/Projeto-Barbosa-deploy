@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Boxes from "./Boxes";
 import Buttons from "./Buttons";
-
 type Palavra = {
     Palavra: string;
     PalavraCorrigida: string;
@@ -33,11 +32,11 @@ const Main = () => {
                 messages: [
                     {
                         role: "system",
-                        content: "Você é um assistente de correção de texto. Identifique erros gramaticais, sugira reorganização de ideias e adaptações para tornar o texto mais compreensível. Retorne um objeto JSON que contém a frase original, a frase corrigida, todas as palavras da frase, indice da palavra e a explicação da mudança na palavra. A estrutura do JSON deve seguir essa estrutura: {FraseOriginal: string, FraseCorrigida: string, Palavras: [{Palavra: string, PalavraCorrigida: string(se não tiver correção deixe vazio), explicacao: string, indice: number}]}. ",
+                        content: "Você é um assistente de correção de texto. Identifique erros gramaticais, sugira reorganização de ideias e adaptações para tornar o texto mais compreensível. Retorne um objeto JSON que contém frase corrigida, todas as palavras da frase, indice da palavra e a explicação da mudança na palavra. A estrutura do JSON deve seguir essa estrutura: {FraseOriginal: string, FraseCorrigida: string, Palavras: [{Palavra: string, PalavraCorrigida: string(se não tiver correção deixe vazio), explicacao: string, indice: number}]}. ",
                     },
                     { role: "user", content: texto },
                 ],
-                model: "gpt-3.5-turbo-1106",
+                model: "gpt-3.5-turbo",
                 response_format: { type: "json_object" },
                 temperature: temperatura,
                 seed: seed,
