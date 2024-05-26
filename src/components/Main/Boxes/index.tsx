@@ -8,23 +8,7 @@ type Palavra = {
     indice: number;
 };
 
-interface BoxesProps {
-    handleInputChange: (input: string) => void;
-    chatGPTResponse: string | null;
-    uploadText?: string;
-    palavras: Palavra[] | null;
-}
-
-interface InputBoxProps {
-    handleInputChange: (input: string) => void;
-    uploadText?: string;
-}
-
-interface OutputBoxProps {
-    chatGPTResponse: string | null;
-    palavras: Palavra[] | null;
-}
-
+interface InputBoxProps { handleInputChange: (input: string) => void; uploadText?: string; };
 const InputBox: React.FC<InputBoxProps> = ({ handleInputChange, uploadText }) => {
 
     const [inputValue, setInputValue] = useState('');
@@ -58,6 +42,7 @@ const InputBox: React.FC<InputBoxProps> = ({ handleInputChange, uploadText }) =>
     );
 };
 
+interface OutputBoxProps { chatGPTResponse: string | null; palavras: Palavra[] | null; };
 const OutPutBox: React.FC<OutputBoxProps> = ({ chatGPTResponse, palavras }) => {
 
     function mappeamentoPalavras(palavras: Palavra[] | null, chatGPTResponse: string | null) {
@@ -121,6 +106,7 @@ const OutPutBox: React.FC<OutputBoxProps> = ({ chatGPTResponse, palavras }) => {
     );
 };
 
+interface BoxesProps { handleInputChange: (input: string) => void; chatGPTResponse: string | null; uploadText?: string; palavras: Palavra[] | null; };
 const Boxes: React.FC<BoxesProps> = ({ handleInputChange, uploadText, chatGPTResponse, palavras }) => {
     return (
         <div className="flex flex-col md:flex-row items-center gap-y-10 lg:gap-y-0 h-[90%] w-full">

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Boxes from "./Boxes";
 import Buttons from "./Buttons";
+
 type Palavra = {
     Palavra: string;
     PalavraCorrigida: string;
