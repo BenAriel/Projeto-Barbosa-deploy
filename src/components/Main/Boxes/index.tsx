@@ -13,7 +13,7 @@ interface InputBoxProps {
 
 interface OutputBoxProps {
     chatGPTResponse: string | null;
-}
+};
 
 const InputBox: React.FC<InputBoxProps> = ({ handleInputChange, uploadText }) => {
 
@@ -55,14 +55,12 @@ const OutputBox: React.FC<OutputBoxProps> = ({ chatGPTResponse }) => {
             <div className="w-full h-[15%] md:h-[10%] lg:h-[10%] border-b-2 border-gray-700 flex justify-center items-center font-bold text-xl bg-white">
                 Correção Sugerida:
             </div>
-            <div className="w-full placeholder-dinamico h-[85%] lg:h-[90%] text-xl px-1">
-                {chatGPTResponse !== null ? (
-                    <p>{chatGPTResponse}</p>
-                ) : (
-                    <p></p>
-                )}
+            <div className="px-2 w-full placeholder-dinamico h-[85%] lg:h-[90%] text-xl text-justify overflow-y-auto">
+                <p className="">
+                    {chatGPTResponse}
+                </p>
             </div>
-        </div>
+        </div >
     );
 };
 
