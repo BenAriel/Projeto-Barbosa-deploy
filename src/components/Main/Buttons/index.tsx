@@ -1,4 +1,5 @@
 import React from 'react';
+import { Spinner } from 'react-bootstrap';
 
 interface ButtonsProps {
     handleCorrection: () => void;
@@ -34,7 +35,6 @@ const Buttons: React.FC<ButtonsProps> = ({ handleCorrection, isLoading, setFileU
         input.click();
     };
 
-
     return (
         <div className="w-full grid lg:grid-cols-3 grid-cols-1 items-center justify-items-center gap-4">
             <div className="justify-self-center">
@@ -45,10 +45,10 @@ const Buttons: React.FC<ButtonsProps> = ({ handleCorrection, isLoading, setFileU
                     <p>Upload de Arquivo de Texto</p>
                 </button>
             </div>
-            <div>
+            <div className="flex gap-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-7 rounded-lg cursor-pointer items-start" onClick={() => handleCorrection()}>
+                <Spinner animation="border" />
                 <button
-                    onClick={() => handleCorrection()}
-                    className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-7 rounded-lg ${isLoading ? 'cursor-progress' : 'cursor-pointer'}`}
+                    className=""
                     disabled={isLoading} >
                     Corrigir Texto
                 </button>
