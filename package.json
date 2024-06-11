@@ -12,6 +12,7 @@
         "@types/react": "^18.2.69",
         "@types/react-dom": "^18.2.22",
         "antd": "^5.16.2",
+        "ldrs": "^1.0.2",
         "openai": "^4.38.2",
         "react": "^18.2.0",
         "react-bootstrap": "^2.10.2",

@@ -101,12 +101,14 @@ const Main = () => {
                         handleInputChange={handleInputChange}
                         chatGPTResponse={chatGPTResponse}
                         uploadText={fileUploadText}
+                        isLoading={isLoading}
                     />
                 ) : (
                     <Boxes
                         key={fileUploadText}
                         handleInputChange={handleInputChange}
                         chatGPTResponse={chatGPTResponse}
+                        isLoading={isLoading}
                     />
                 )}
             </div>
