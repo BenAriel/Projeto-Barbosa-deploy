@@ -117,7 +117,8 @@ const Main = () => {
                     handleCorrection={handleCorrection}
                     isLoading={isLoading}
                     setFileUpload={handleFileUpload}
-                    fullText={chatGPTResponse} />
+                    fullText={chatGPTResponse}
+                />
             </div>
         </div>
     );
