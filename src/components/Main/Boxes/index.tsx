@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Popover } from "antd";
+import Popover from "../../ui/Popover";
 
 type Palavra = {
     Palavra: string;
@@ -80,23 +80,26 @@ const OutPutBox: React.FC<OutputBoxProps> = ({ chatGPTResponse, palavras }) => {
             <div className="w-full placeholder-dinamico h-[85%] lg:h-[90%] text-xl px-1">
                 {palavras !== null ? (
                     <div>
-                        {palavras.map((palavra) => (
-                            palavra.Palavra !== palavra.PalavraCorrigida && palavra.PalavraCorrigida !== ""
-                                ?
-                                <span key={palavra.indice}>
-                                    <Popover content={palavra.explicacao} trigger="hover" className="cursor-pointer">
-                                        <span style={{ textDecoration: "underline", textDecorationColor: "red" }}>
-                                            {palavra.PalavraCorrigida}
-                                        </span>
-                                    </Popover>
-                                    <span>{" "}</span>
-                                </span>
-                                :
-                                <span key={palavra.indice}>
-                                    {palavra.PalavraCorrigida}
-                                    <span>{" "}</span>
-                                </span>
-                        ))}
+                        {
+                            //TODO: fix this mess
+                            palavras.map((palavra) => (
+                                palavra.Palavra !== palavra.PalavraCorrigida && palavra.PalavraCorrigida !== ""
+                                    ?
+                                    <span key={palavra.indice}>
+                                        <Popover preferredPosition='bottom-center'>
+                                            <span style={{ textDecoration: "underline", textDecorationColor: "red" }}>
+                                                {palavra.PalavraCorrigida}
+                                            </span>
+                                        </Popover>
+                                        <span>{" "}</span>
+                                    </span>
+                                    :
+                                    <span key={palavra.indice}>
+                                        {palavra.PalavraCorrigida}
+                                        <span>{" "}</span>
+                                    </span>
+                            ))
+                        }
                     </div>
                 ) : (
                     <span></span>
