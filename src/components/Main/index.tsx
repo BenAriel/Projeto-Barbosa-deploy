@@ -112,6 +112,7 @@ const Main = () => {
                         chatGPTResponse={chatGPTResponse}
                         uploadText={fileUploadText}
                         palavras={response}
+                        isLoading={isLoading}
                     />
                 ) : (
                     <Boxes
@@ -119,6 +120,7 @@ const Main = () => {
                         handleInputChange={handleInputChange}
                         chatGPTResponse={chatGPTResponse}
                         palavras={response}
+                        isLoading={isLoading}
                     />
                 )}
             </div>
