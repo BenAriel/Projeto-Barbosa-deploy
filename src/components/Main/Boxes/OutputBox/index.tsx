@@ -19,9 +19,13 @@ const OutputBox: React.FC<OutputBoxProps> = ({ chatGPTResponse, isLoading, corre
         <div className="w-[75%] lg:w-1/2 h-[100%] border-2 border-gray-700 mx-8 bg-gray-200">
             <div className="w-full h-[15%] md:h-[10%] lg:h-[10%] border-b-2 border-gray-700 flex justify-center items-center font-bold text-xl bg-white relative">
                 <div className="absolute left-0 z-10 ml-4 text-sm bg-blue-400 p-1 px-2 rounded-md font-normal">
-                    <Popover placement='bottom' content={popoverContent}>
+                    {(!correcoes || correcoes.trim() === '') ? (
                         <button>Correções feitas</button>
-                    </Popover>
+                    ) : (
+                        <Popover placement='bottom' content={popoverContent}>
+                            <button>Correções feitas</button>
+                        </Popover>
+                    )}
                 </div>
                 <p className="absolute left-1/2 transform -translate-x-1/2">Correção Sugerida:</p>
             </div >
