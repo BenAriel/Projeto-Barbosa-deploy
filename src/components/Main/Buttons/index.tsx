@@ -24,7 +24,7 @@ const Buttons: React.FC<ButtonsProps> = ({ handleCorrection, isLoading, setFileU
     function upload() {
         const input = document.createElement('input');
         input.type = 'file';
-        input.accept = '.txt, .pdf';
+        input.accept = '.txt, .pdf, application/xml, .docx, .doc';
         input.onchange = () => {
             const file = input.files?.item(0);
             if (!file) {
@@ -33,9 +33,8 @@ const Buttons: React.FC<ButtonsProps> = ({ handleCorrection, isLoading, setFileU
             setFileUpload(file);
         };
         input.click();
+        console.log(input);
     };
-
-    //deploy
 
     return (
         <div className="w-full grid lg:grid-cols-3 grid-cols-1 items-center justify-items-center gap-4">

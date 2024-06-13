@@ -17,6 +17,8 @@ type Response = {
 
 const Main = () => {
 
+    const key = "Bearer " + process.env.REACT_APP_API_KEY;
+
     const [inputValue, setInputValue] = useState<string>("");
     const handleInputChange = (input: string) => {
         setInputValue(input);
@@ -46,7 +48,7 @@ const Main = () => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: "Bearer sk-proj-zszOcjQ1JgWoFawgbYA0T3BlbkFJIycGYBw2YELQx6IR7qaE",
+                    Authorization: key,
                 },
                 body: JSON.stringify(requestBody),
             };
