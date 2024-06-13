@@ -14,7 +14,7 @@ const Boxes: React.FC<BoxesProps> = ({ handleInputChange, uploadText, chatGPTRes
     return (
         <div className="flex flex-col md:flex-row items-center gap-y-10 lg:gap-y-0 h-[90%] w-full">
             <InputBox handleInputChange={handleInputChange} uploadText={uploadText} />
-            <OutPutBox chatGPTResponse={chatGPTResponse} palavras={palavras} isLoading />
+            <OutPutBox chatGPTResponse={chatGPTResponse} palavras={palavras} isLoading={isLoading} />
         </div>
     );
 };

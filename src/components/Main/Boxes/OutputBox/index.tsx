@@ -1,6 +1,6 @@
 import React from "react";
 import Popover from "../../../ui/Popover";
-import { ring } from 'ldrs';
+import { ring } from "ldrs";
 
 type Palavra = {
     Palavra: string;
@@ -11,6 +11,8 @@ type Palavra = {
 
 interface OutputBoxProps { chatGPTResponse: string | null; palavras: Palavra[] | null; isLoading: boolean; };
 const OutPutBox: React.FC<OutputBoxProps> = ({ chatGPTResponse, palavras, isLoading }) => {
+
+    ring.register();
 
     function mappeamentoPalavras(palavras: Palavra[] | null, chatGPTResponse: string | null) {
         if (palavras !== null && chatGPTResponse !== null) {
@@ -45,31 +47,42 @@ const OutPutBox: React.FC<OutputBoxProps> = ({ chatGPTResponse, palavras, isLoad
                 Correção Sugerida:
             </div>
             <div className="w-full placeholder-dinamico h-[85%] lg:h-[90%] text-xl px-1">
-                {palavras !== null ? (
-                    <div>
-                        {
-                            //TODO: fix this mess
-                            palavras.map((palavra) => (
-                                palavra.Palavra !== palavra.PalavraCorrigida && palavra.PalavraCorrigida !== ""
-                                    ?
-                                    <span key={palavra.indice}>
-                                        <Popover preferredPosition='bottom-center'>
-                                            <span style={{ textDecoration: "underline", textDecorationColor: "red" }}>
-                                                {palavra.PalavraCorrigida}
-                                            </span>
-                                        </Popover>
-                                        <span>{" "}</span>
-                                    </span>
-                                    :
-                                    <span key={palavra.indice}>
-                                        {palavra.PalavraCorrigida}
-                                        <span>{" "}</span>
-                                    </span>
-                            ))
-                        }
-                    </div>
+                {!isLoading ? (
+                    palavras !== null ? (
+                        <div>
+                            {
+                                //TODO: fix this mess
+                                palavras.map((palavra) => (
+                                    palavra.Palavra !== palavra.PalavraCorrigida && palavra.PalavraCorrigida !== ""
+                                        ?
+                                        <span key={palavra.indice}>
+                                            <Popover preferredPosition='bottom-center'>
+                                                <Popover.Trigger>
+                                                    <span className="cursor-pointer" style={{ textDecoration: "underline", textDecorationColor: "red" }}>
+                                                        {palavra.PalavraCorrigida}
+                                                    </span>
+                                                </Popover.Trigger>
+                                                <Popover.Content>
+                                                    <p className="text-sm p-2">{palavra.explicacao}</p>
+                                                </Popover.Content>
+                                            </Popover>
+                                            <span>{" "}</span>
+                                        </span>
+                                        :
+                                        <span key={palavra.indice}>
+                                            {palavra.PalavraCorrigida}
+                                            <span>{" "}</span>
+                                        </span>
+                                ))
+                            }
+                        </div>
+                    ) : (
+                        <span></span>
+                    )
                 ) : (
-                    <span></span>
+                    <div className="w-full h-full flex items-center justify-center pb-10">
+                        <l-ring size="40" stroke="5" bg-opacity="0" speed="1.6" color="#00c6f0"></l-ring>
+                    </div>
                 )}
             </div>
         </div>

@@ -147,6 +147,7 @@ function ContentInternal({ children }: { children: React.ReactNode }) {
                 top: `${coords.top}px`,
                 margin: 0,
             }}
+            className="rounded-lg"
         >
             {children}
         </dialog>
