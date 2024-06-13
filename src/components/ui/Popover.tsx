@@ -222,7 +222,6 @@ function useFocusTrapping() {
         // 1. focus the first focusable
         // @ts-ignore, TODO: fix typing
         focusables[0]?.focus();
-        console.log('mount popover focusing', focusables[0]);
 
         // 2. attach keyboard event listener to trap the focus
         document.addEventListener('keydown', onKeyDown);

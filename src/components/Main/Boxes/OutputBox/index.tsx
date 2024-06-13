@@ -32,14 +32,15 @@ const OutPutBox: React.FC<OutputBoxProps> = ({ chatGPTResponse, palavras, isLoad
     function printPalavras(palavras: Palavra[] | null) {
         if (palavras !== null) {
             palavras.forEach((palavra) => {
+                console.log(palavra.indice);
                 console.log(palavra.Palavra);
                 console.log(palavra.PalavraCorrigida);
                 console.log(palavra.explicacao);
-                console.log(palavra.indice);
+                console.log("----");
             });
         }
     };
-    //printPalavras(palavras);
+    printPalavras(palavras);
 
     return (
         <div className="w-[75%] lg:w-1/2 h-[100%] border-2 border-gray-700 mx-8 bg-gray-200">
