@@ -35,6 +35,8 @@ const Buttons: React.FC<ButtonsProps> = ({ handleCorrection, isLoading, setFileU
         input.click();
     };
 
+    //deploy
+
     return (
         <div className="w-full grid lg:grid-cols-3 grid-cols-1 items-center justify-items-center gap-4">
             <div className="justify-self-center">
