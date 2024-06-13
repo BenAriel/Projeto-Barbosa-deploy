@@ -45,13 +45,15 @@ const Buttons: React.FC<ButtonsProps> = ({ handleCorrection, isLoading, setFileU
                     <p>Upload de Arquivo de Texto</p>
                 </button>
             </div>
-            <div>
-                <button
-                    onClick={() => handleCorrection()}
-                    className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-7 rounded-lg ${isLoading ? 'cursor-progress' : 'cursor-pointer'}`}
-                    disabled={isLoading} >
-                    Corrigir Texto
-                </button>
+            <div className={`flex bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-9 rounded-lg ${isLoading ? 'cursor-wait' : 'cursor-pointer'} items-start`} onClick={() => handleCorrection()}>
+                <div className={`flex gap-2 ${isLoading}`}>
+                    {isLoading && <l-ring size="25" stroke="5" bg-opacity="0" speed="1.2" color="#00c6f0"></l-ring>}
+                    <button
+                        className=""
+                        disabled={isLoading} >
+                        Corrigir Texto
+                    </button>
+                </div>
             </div>
             <div className="justify-self-center">
                 <button
