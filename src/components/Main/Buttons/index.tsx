@@ -1,5 +1,5 @@
 import React from 'react';
-import { ring } from 'ldrs';
+import DownloadButton from './DownloadButton';
 
 interface ButtonsProps {
     handleCorrection: () => void;
@@ -10,13 +10,38 @@ interface ButtonsProps {
 
 const Buttons: React.FC<ButtonsProps> = ({ handleCorrection, isLoading, setFileUpload, fullText }) => {
 
-    function baixarArquivoTexto() {
-        if (!fullText) return;
+    function baixarArquivoTexto(type: string) {
+        console.log("Download " + fullText + " as " + type);
+        if (!fullText) {
+            alert('Nenhum texto para baixar');
+            return;
+        }
         const response = fullText; // replace with your actual text
+        let mimeType = 'text/plain';
+        let fileExtension = '.txt';
+
+        switch (type) {
+            case 'PDF':
+                mimeType = 'application/pdf';
+                fileExtension = '.pdf';
+                break;
+            case 'WORD':
+                mimeType = 'application/msword';
+                fileExtension = '.doc';
+                break;
+            case 'TXT':
+                mimeType = 'text/plain';
+                fileExtension = '.txt';
+                break;
+            default:
+                console.error(`Unsupported file type: ${type}`);
+                return;
+        }
+
         const element = document.createElement("a");
-        const file = new Blob([response], { type: 'text/plain' });
+        const file = new Blob([response], { type: mimeType });
         element.href = URL.createObjectURL(file);
-        element.download = "myFile.txt";
+        element.download = "myFile" + fileExtension;
         document.body.appendChild(element); // Required for this to work in FireFox
         element.click();
     };
@@ -56,14 +81,7 @@ const Buttons: React.FC<ButtonsProps> = ({ handleCorrection, isLoading, setFileU
                     </button>
                 </div>
             </div>
-            <div className="justify-self-center">
-                <button
-                    className="flex border-2 border-black hover:bg-gray-200 font-bold py-4 px-4 rounded-lg"
-                    onClick={baixarArquivoTexto} >
-                    <img src={"/baixar.png"} alt="Baixar" className="h-6 w-6 inline-block mr-3" />
-                    <p>Download do Texto Corrigido</p>
-                </button>
-            </div>
+            <DownloadButton baixarArquivoTexto={baixarArquivoTexto} />
         </div >
     );
 };

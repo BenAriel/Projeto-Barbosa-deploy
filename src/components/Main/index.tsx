@@ -2,17 +2,9 @@ import React, { useState } from "react";
 import Boxes from "./Boxes";
 import Buttons from "./Buttons";
 
-type Palavra = {
-    Palavra: string;
-    PalavraCorrigida: string;
-    explicacao: string;
-    indice: number;
-};
-
 type Response = {
-    FraseOriginal: string;
     FraseCorrigida: string;
-    Palavras: Palavra[];
+    Correcoes: string;
 }
 
 const Main = () => {
@@ -35,7 +27,7 @@ const Main = () => {
                 messages: [
                     {
                         role: "system",
-                        content: "Você é um assistente de correção de texto. Identifique erros gramaticais, sugira reorganização de ideias e adaptações para tornar o texto mais compreensível. Retorne um objeto JSON que contém frase corrigida. A estrutura do JSON deve seguir essa estrutura: {FraseCorrigida: string}.",
+                        content: "Você é um assistente de correção de texto. Identifique erros gramaticais, sugira reorganização de ideias e adaptações para tornar o texto mais compreensível. Retorne um objeto JSON que contém frase corrigida e um breve resumo do que foi melhorado no texto(concordância,coesão,etc). A estrutura do JSON deve seguir essa estrutura: {FraseCorrigida: string,Correcoes:String}.",
                     },
                     { role: "user", content: texto },
                 ],
@@ -66,6 +58,7 @@ const Main = () => {
                 } else {
                     const response: Response = JSON.parse(chatGPTResponse);
                     setChatGPTResponse(response.FraseCorrigida);
+                    setCorrecoes(response.Correcoes);
                 }
 
             } catch (error) {
@@ -75,6 +68,8 @@ const Main = () => {
         }
         setIsLoading(false);
     };
+
+    const [correcoes, setCorrecoes] = useState<string | null>(null);
 
     const [chatGPTResponse, setChatGPTResponse] = useState<string | null>(null);
 
@@ -104,6 +99,7 @@ const Main = () => {
                         chatGPTResponse={chatGPTResponse}
                         uploadText={fileUploadText}
                         isLoading={isLoading}
+                        correcoes={correcoes}
                     />
                 ) : (
                     <Boxes
@@ -111,6 +107,7 @@ const Main = () => {
                         handleInputChange={handleInputChange}
                         chatGPTResponse={chatGPTResponse}
                         isLoading={isLoading}
+                        correcoes={correcoes}
                     />
                 )}
             </div>
