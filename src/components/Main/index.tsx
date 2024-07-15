@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+import Login from "./Login";
 import Boxes from "./Boxes";
 import Buttons from "./Buttons";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../../firebase";
 
 type Response = {
     FraseCorrigida: string;
@@ -19,6 +22,8 @@ const Main = () => {
     const handleCorrection = async () => {
         setIsLoading(true);
         const texto = inputValue.trim();
+
+        sendQuestion(texto);
 
         if (texto !== "") {
             const seed = 60;
@@ -89,8 +94,21 @@ const Main = () => {
         reader.readAsText(file);
     };
 
+    const [name, setName] = useState<string>("");
+    const sendQuestion = async (question: string) => {
+        try {
+            const docRef = await addDoc(collection(db, "questions"), {
+                user: name,
+                question: question,
+            });
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        };
+    };
+
     return (
         <div className="w-full h-[90%] flex flex-row flex-wrap">
+            <Login name={name} setName={setName} />
             <div className="w-full h-[90%]">
                 {fileUploadText !== null ? (
                     <Boxes
