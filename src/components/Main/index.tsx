@@ -1,21 +1,18 @@
 import React, { useState } from "react";
+import Login from "./Login";
 import Boxes from "./Boxes";
 import Buttons from "./Buttons";
-
-type Palavra = {
-    Palavra: string;
-    PalavraCorrigida: string;
-    explicacao: string;
-    indice: number;
-};
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../../firebase";
 
 type Response = {
-    FraseOriginal: string;
     FraseCorrigida: string;
-    Palavras: Palavra[];
+    Correcoes: string;
 }
 
 const Main = () => {
+
+    const key = "Bearer " + process.env.REACT_APP_API_KEY;
 
     const [inputValue, setInputValue] = useState<string>("");
     const handleInputChange = (input: string) => {
@@ -26,10 +23,7 @@ const Main = () => {
         setIsLoading(true);
         const texto = inputValue.trim();
 
-        //TODO - check necessity of this validation
-        //if (texto === "" || texto === null) {
-        //alert("Por favor, insira um texto para ser corrigido.");
-        //}
+        sendQuestion(texto);
 
         if (texto !== "") {
             const seed = 60;
@@ -38,12 +32,11 @@ const Main = () => {
                 messages: [
                     {
                         role: "system",
-                        content: "Você é um assistente de correção de texto. Identifique erros gramaticais, sugira reorganização de ideias e adaptações para tornar o texto mais compreensível. Retorne um objeto JSON que contém a frase original, a frase corrigida, todas as palavras da frase, indice da palavra e a explicação da mudança na palavra. A estrutura do JSON deve seguir essa estrutura: {FraseOriginal: string, FraseCorrigida: string, Palavras: [{Palavra: string, PalavraCorrigida: string(se não tiver correção deixe vazio), explicacao: string, indice: number}]}. ",
+                        content: "Você é um assistente de correção de texto. Identifique erros gramaticais, sugira reorganização de ideias e adaptações para tornar o texto mais compreensível. Retorne um objeto JSON que contém frase corrigida e um breve resumo do que foi melhorado no texto(concordância,coesão,etc). A estrutura do JSON deve seguir essa estrutura: {FraseCorrigida: string,Correcoes:String}.",
                     },
                     { role: "user", content: texto },
                 ],
                 model: "gpt-3.5-turbo-1106",
-                response_format: { type: "json_object" },
                 temperature: temperatura,
                 seed: seed,
             };
@@ -52,8 +45,7 @@ const Main = () => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization:
-                        "Bearer sk-proj-zszOcjQ1JgWoFawgbYA0T3BlbkFJIycGYBw2YELQx6IR7qaE",
+                    Authorization: key,
                 },
                 body: JSON.stringify(requestBody),
             };
@@ -63,33 +55,28 @@ const Main = () => {
                     "https://api.openai.com/v1/chat/completions",
                     requestOptions
                 );
-                const data: any = await fetchResponse.json();
-                const chatGPTResponse = data.choices[0]?.message?.content;
+                const data = await fetchResponse.json();
+                const chatGPTResponse = data.choices?.[0]?.message?.content;
 
                 if (chatGPTResponse === undefined) {
                     setChatGPTResponse("Erro ao obter resposta do ChatGPT");
+                } else {
+                    const response: Response = JSON.parse(chatGPTResponse);
+                    setChatGPTResponse(response.FraseCorrigida);
+                    setCorrecoes(response.Correcoes);
                 }
-
-                const response: Response = JSON.parse(chatGPTResponse);
-
-                //console.log("Frase original:", response.FraseOriginal);
-                //console.log("Frase corrigida:", response.FraseCorrigida);
-                //console.log("Palavras:", response.Palavras);
-
-                // Update the state with the API response
-                setChatGPTResponse(response.FraseCorrigida);
-                setResponse(response.Palavras);
 
             } catch (error) {
                 console.error("Error when getting response from ChatGPT:", error);
+                setChatGPTResponse("Erro ao obter resposta do ChatGPT");
             }
         }
         setIsLoading(false);
     };
 
-    const [chatGPTResponse, setChatGPTResponse] = useState<string | null>(null);
+    const [correcoes, setCorrecoes] = useState<string | null>(null);
 
-    const [response, setResponse] = useState<Palavra[] | null>(null);
+    const [chatGPTResponse, setChatGPTResponse] = useState<string | null>(null);
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -103,14 +90,25 @@ const Main = () => {
             const text = reader.result as string;
             setFileUploadText(text);
             setChatGPTResponse(null);
-            //console.log("Texto do arquivo:", text);
         };
         reader.readAsText(file);
     };
 
+    const [name, setName] = useState<string>("");
+    const sendQuestion = async (question: string) => {
+        try {
+            const docRef = await addDoc(collection(db, "questions"), {
+                user: name,
+                question: question,
+            });
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        };
+    };
 
     return (
         <div className="w-full h-[90%] flex flex-row flex-wrap">
+            <Login name={name} setName={setName} />
             <div className="w-full h-[90%]">
                 {fileUploadText !== null ? (
                     <Boxes
@@ -118,14 +116,16 @@ const Main = () => {
                         handleInputChange={handleInputChange}
                         chatGPTResponse={chatGPTResponse}
                         uploadText={fileUploadText}
-                        palavras={response}
+                        isLoading={isLoading}
+                        correcoes={correcoes}
                     />
                 ) : (
                     <Boxes
                         key={fileUploadText}
                         handleInputChange={handleInputChange}
                         chatGPTResponse={chatGPTResponse}
-                        palavras={response}
+                        isLoading={isLoading}
+                        correcoes={correcoes}
                     />
                 )}
             </div>
@@ -134,7 +134,8 @@ const Main = () => {
                     handleCorrection={handleCorrection}
                     isLoading={isLoading}
                     setFileUpload={handleFileUpload}
-                    fullText={chatGPTResponse} />
+                    fullText={chatGPTResponse}
+                />
             </div>
         </div>
     );
